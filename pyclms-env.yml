@@ -8,3 +8,4 @@ dependencies:
   - flake8
   - isort
   - pylint
+  - pytest
