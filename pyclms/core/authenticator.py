@@ -9,7 +9,7 @@ WEkEO HDA client.
 import getpass
 import os
 
-from hda import Client
+from hda import Client, Configuration
 
 
 class AuthenticationError(Exception):
@@ -34,46 +34,36 @@ class ClientBuilder(Client):
 
     """
 
-    _USERPATH = os.path.expanduser("~")
-    _CONFIGFILE = os.path.join(_USERPATH, ".hdarc")
-    _URL = "https://wekeo-broker.apps.mercator.dpi.wekeo.eu/databroker"
-
     def __init__(self, user: str = None, password: str = None):
-        self._build_config(user=user, password=password)
-        super().__init__()
+        config = self._build_config(user=user, password=password)
+        super().__init__(config=config)
+        self._validate_client(client=self)
 
     def _build_config(self, user: str = None, password: str = None) -> Client:
         """
         Build the configuration file for the WEkEO HDA client.
         """
-        configfile = self._CONFIGFILE
         if user is None and password is None:
-            if not os.path.isfile(configfile):
+            if (
+                os.getenv("HDA_USER") is not None
+                and os.getenv("HDA_PASSWORD") is not None
+            ):
+                user = os.getenv("HDA_USER")
+                password = os.getenv("HDA_PASSWORD")
+            else:
                 user = input("Enter your username: ")
                 password = getpass.getpass("Enter your password: ")
-                config = [
-                    f"url: {self._URL}",
-                    f"user: {user}",
-                    f"password: {password}",
-                ]
-                with open(configfile, "w", encoding="utf-8") as fp:
-                    fp.write("\n".join(config))
-        if user is not None and password is not None:
-            config = [
-                f"url: {self._URL}",
-                f"user: {user}",
-                f"password: {password}",
-            ]
-            with open(configfile, "w", encoding="utf-8") as fp:
-                fp.write("\n".join(config))
+                os.environ["HDA_USER"] = user
+                os.environ["HDA_PASSWORD"] = password
+        else:
+            os.environ["HDA_USER"] = user
+            os.environ["HDA_PASSWORD"] = password
 
-        client = self._validate_client(
-            client=Client(), configfile=self._CONFIGFILE
-        )
-        return client
+        config = Configuration(user=user, password=password)
+        return config
 
     @staticmethod
-    def _validate_client(client: Client, configfile) -> Client:
+    def _validate_client(client: Client) -> Client:
         """
         Validate the client.
         """
@@ -81,6 +71,6 @@ class ClientBuilder(Client):
             _ = client.token
             return client
         except Exception as e:
-            if os.path.exists(configfile):
-                os.remove(configfile)
+            os.environ.pop("HDA_USER")
+            os.environ.pop("HDA_PASSWORD")
             raise AuthenticationError() from e
