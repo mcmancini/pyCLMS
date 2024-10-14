@@ -15,7 +15,7 @@ lonlat2osgrid(coords, figs)
 
 osgrid2bbox(gridref, os_cellsize)
     Convert British National Grid references to OSGB36 numeric
-    coordinates of the bounding box of the 10km grid or 100km grid
+    coordinates of the bounding box of the 1km, 10km grid or 100km grid
     squares.
 
 """
@@ -65,12 +65,12 @@ _, _offset_map = _init_regions_and_offsets()
 def osgrid2bbox(gridref, os_cellsize, epsg):
     """
     Convert British National Grid references to OSGB36 numeric coordinates
-    of the bounding box of the 10km grid or 100km grid squares in a specified
-    CRS.
+    of the bounding box of the 1km, 10km grid or 100km grid squares in a
+    specified CRS.
     Grid references can be 2, 4, 6, 8 or 10 figures.
 
     :param gridref: str - BNG grid reference
-    :param os_cellsize: str - '10km' or '100km'
+    :param os_cellsize: str - '1km1, '10km' or '100km'
     :param epsg: int - EPSG code for the desired CRS
 
     :returns coords: dictionary {xmin, xmax, ymin, ymax}
@@ -78,8 +78,12 @@ def osgrid2bbox(gridref, os_cellsize, epsg):
     Examples:
 
     Single value
-    >>> osgrid2bbox('NT2755072950', '10km', 27700)
-    {'xmin': 320000, 'xmax': 330000, 'ymin': 670000, 'ymax': 680000}
+    >>> osgrid2bbox('NT2755062950', '10km', 27700)
+    {'xmin': 320000, 'xmax': 330000, 'ymin': 660000, 'ymax': 670000}
+    >>> osgrid2bbox('NT2755062950', '100km', 27700)
+    {'xmin': 300000, 'xmax':400000, 'ymin': 600000, 'ymax': 700000}
+    >>> osgrid2bbox('NT2755062950', '1km', 27700)
+    {'xmin': 327000, 'xmax':328000, 'ymin': 662000, 'ymax': 663000}
 
     For multiple values, use Python's zip function and list comprehension
     >>> gridrefs = ['HU431392', 'SJ637560', 'TV374354']
@@ -97,7 +101,7 @@ def osgrid2bbox(gridref, os_cellsize, epsg):
     )
 
     gridref = gridref.upper()
-    if os_cellsize == "10km":
+    if os_cellsize in ["1km", "10km"]:
         try:
             pattern = r"^([A-Z]{2})(\d{2}|\d{4}|\d{6}|\d{8}|\d{10})$"
             match = re.match(pattern, gridref)
@@ -126,21 +130,27 @@ def osgrid2bbox(gridref, os_cellsize, epsg):
     except KeyError as exc:
         raise BNGError(f"Invalid grid square code: {region}") from exc
 
-    # Get easting and northing from text and convert to coords
-    if os_cellsize == "10km":
-        coords = coords[0:2]  # bbox is for each 10km cell!
-        easting = int(coords[: (len(coords) // 2)])
-        northing = int(coords[(len(coords) // 2) :])
-        scale_factor = 10 ** (5 - (len(coords) // 2))
-        x_min = int(easting * scale_factor + _offset_map[region][0])
-        y_min = int(northing * scale_factor + _offset_map[region][1])
-        x_max = int(easting * scale_factor + _offset_map[region][0] + 1e4)
-        y_max = int(northing * scale_factor + _offset_map[region][1] + 1e4)
-    elif os_cellsize == "100km":
+    rescaling = {
+        "1km": {"coord_len": 2, "scale_factor": 1e3},
+        "10km": {"coord_len": 1, "scale_factor": 1e4},
+    }
+
+    if os_cellsize == "100km":
         x_min = int(_offset_map[region][0])
         y_min = int(_offset_map[region][1])
         x_max = int(_offset_map[region][0] + 1e5)
         y_max = int(_offset_map[region][1] + 1e5)
+    elif os_cellsize in ["1km", "10km"]:
+        coord_len = rescaling[os_cellsize]["coord_len"]
+        scale_factor = rescaling[os_cellsize]["scale_factor"]
+        easting = int(coords[0:coord_len])
+        northing = int(
+            coords[int(len(coords) / 2) : int(len(coords) / 2) + coord_len]
+        )
+        x_min = int(easting * scale_factor + _offset_map[region][0])
+        y_min = int(northing * scale_factor + _offset_map[region][1])
+        x_max = int(easting * scale_factor + _offset_map[region][0] + 1e4)
+        y_max = int(northing * scale_factor + _offset_map[region][1] + 1e4)
     else:
         raise BNGError(
             "Invalid argument 'os_cellsize' "
