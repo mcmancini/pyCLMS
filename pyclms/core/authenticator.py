@@ -30,7 +30,20 @@ class AuthenticationError(Exception):
 class ClientBuilder(Client):
     """
     A class to build the configuration file for the WEkEO HDA client.
-    This works as follows:
+    Initialising an instance of this class will prompt the user to
+    enter their username and password and store them as environment
+    variables, unless username and password are passed as arguments.
+    These will be used to authenticate the user to the
+    WEkEO HDA client, which will then returned as an instance of the
+    ClientBuilder class, which is a child of the hda.Client class,
+    and can be used to search for datasets and download data.
+
+    Parameters
+    ----------
+    user : str (optional)
+        The username of the user.
+    password : str (optional)
+        The password of the user.
 
     """
 
@@ -41,7 +54,8 @@ class ClientBuilder(Client):
 
     def _build_config(self, user: str = None, password: str = None) -> Client:
         """
-        Build the configuration file for the WEkEO HDA client.
+        Request and store the user's username and password as environment
+        variables.
         """
         if user is None and password is None:
             if (
@@ -65,7 +79,7 @@ class ClientBuilder(Client):
     @staticmethod
     def _validate_client(client: Client) -> Client:
         """
-        Validate the client.
+        Method to validate the client and check for authentication errors.
         """
         try:
             _ = client.token
