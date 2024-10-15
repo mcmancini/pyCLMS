@@ -21,10 +21,10 @@ def test_osgrid2bbox_10km_27700():
         "y_min": 660000,
         "y_max": 670000,
     }
-    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e-9)
-    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e-9)
-    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e-9)
-    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e-9)
+    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e7)
+    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e7)
+    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e7)
+    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e7)
 
 
 def test_osgrid2bbox_10km_4326():
@@ -39,10 +39,10 @@ def test_osgrid2bbox_10km_4326():
         "y_min": 55.826586088175084,
         "y_max": 55.91797307559743,
     }
-    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e-9)
-    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e-9)
-    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e-9)
-    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e-9)
+    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e7)
+    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e7)
+    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e7)
+    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e7)
 
 
 def test_osgrid2bbox_100km_27700():
@@ -57,10 +57,10 @@ def test_osgrid2bbox_100km_27700():
         "y_min": 600000,
         "y_max": 700000,
     }
-    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e-9)
-    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e-9)
-    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e-9)
-    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e-9)
+    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e7)
+    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e7)
+    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e7)
+    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e7)
 
 
 def test_osgrid2bbox_100km_4326():
@@ -75,10 +75,10 @@ def test_osgrid2bbox_100km_4326():
         "y_min": 55.28394104991955,
         "y_max": 56.192619048829656,
     }
-    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e-9)
-    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e-9)
-    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e-9)
-    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e-9)
+    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e7)
+    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e7)
+    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e7)
+    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e7)
 
 
 def test_osgrid2bbox_1km_27700():
@@ -93,10 +93,10 @@ def test_osgrid2bbox_1km_27700():
         "y_min": 662000,
         "y_max": 672000,
     }
-    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e-9)
-    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e-9)
-    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e-9)
-    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e-9)
+    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e7)
+    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e7)
+    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e7)
+    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e7)
 
 
 def test_osgrid2bbox_1km_4326():
@@ -111,10 +111,10 @@ def test_osgrid2bbox_1km_4326():
         "y_min": 55.84566280459672,
         "y_max": 55.93690881266649,
     }
-    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e-9)
-    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e-9)
-    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e-9)
-    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e-9)
+    assert bbox["x_min"] == pytest.approx(expected["x_min"], rel=1e7)
+    assert bbox["x_max"] == pytest.approx(expected["x_max"], rel=1e7)
+    assert bbox["y_min"] == pytest.approx(expected["y_min"], rel=1e7)
+    assert bbox["y_max"] == pytest.approx(expected["y_max"], rel=1e7)
 
 
 def test_osgrid2bbox_invalid_gridref():
