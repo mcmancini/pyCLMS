@@ -34,9 +34,9 @@ jobs:
           python -m flake8 ./pyclms/ --count --show-source --statistics
           python -m isort --apply .
 
-      # - name: Unit Testing
-      #   run: |
-      #     python -m pytest ./pyclms/tests/
+      - name: Unit Testing
+        run: |
+          python -m pytest ./pyclms/tests/
 
     #   - name: Notebook Testing
     #     run: |

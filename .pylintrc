@@ -1,2 +1,5 @@
 [MESSAGES CONTROL]
 disable=R0902,R0903,R0914,E1101
+
+[FORMAT]
+max-line-length = 79
