@@ -6,9 +6,11 @@ Tests for the procedures to authenticate users to the WEkEO HDA client.
 """
 
 import os
-import pytest
 from unittest import mock
-from pyclms.core.authenticator import ClientBuilder, AuthenticationError
+
+import pytest
+
+from pyclms.core.authenticator import AuthenticationError, ClientBuilder
 
 
 class Configuration:

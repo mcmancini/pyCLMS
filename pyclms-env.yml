@@ -6,6 +6,8 @@ dependencies:
   - python=3.12.0
   - black
   - flake8
+  - gdal
+  - geopandas
   - hda
   - isort
   - pip

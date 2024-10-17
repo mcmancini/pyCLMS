@@ -4,9 +4,11 @@
 """
 Testing of procedures for the utility functions
 """
+import os
 
 import pytest
-from pyclms.core.utils import osgrid2bbox, BNGError
+
+from pyclms.core.utils import BNGError, osgrid2bbox, vector2bbox
 
 
 def test_osgrid2bbox_10km_27700():
@@ -127,3 +129,29 @@ def test_osgrid2bbox_invalid_cellsize():
     """Test for invalid cell size input."""
     with pytest.raises(BNGError):
         osgrid2bbox("NT2755072950", "20km", 27700)
+
+
+def assert_bbox_close(bbox1, bbox2, tolerance=1e-7):
+    """Helper function to assert that two bounding boxes are close."""
+    assert pytest.approx(bbox1["x_min"], bbox2["x_min"], rel_tol=tolerance)
+    assert pytest.approx(bbox1["x_max"], bbox2["x_max"], rel_tol=tolerance)
+    assert pytest.approx(bbox1["y_min"], bbox2["y_min"], rel_tol=tolerance)
+    assert pytest.approx(bbox1["y_max"], bbox2["y_max"], rel_tol=tolerance)
+
+
+def test_vector2bbox():
+    """Test for vector2bbox function with different formats."""
+    shp_file = ".tests/data/parcel.shp"
+    geojson_file = ".tests/data/parcel.geojson"
+    expected_bbox = {
+        "x_min": -3.177028636693752,
+        "x_max": -3.171157972148295,
+        "y_min": 50.702596375442674,
+        "y_max": 50.706616337507135,
+    }
+    if os.path.exists(shp_file):
+        bbox_shp = vector2bbox(shp_file)
+        assert_bbox_close(bbox_shp, expected_bbox)
+    if os.path.exists(geojson_file):
+        bbox_geojson = vector2bbox(geojson_file)
+        assert_bbox_close(bbox_geojson, expected_bbox)

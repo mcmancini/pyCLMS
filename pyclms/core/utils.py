@@ -18,9 +18,13 @@ osgrid2bbox(gridref, os_cellsize)
     coordinates of the bounding box of the 1km, 10km grid or 100km grid
     squares.
 
+vector2bbox(vector_file)
+    Retrieves the coordinates of the bounding box of an input vector
+    file. This can be a shapefile or a GeoJSON file.
 """
 
 import re
+import geopandas as gpd
 
 from pyproj import Transformer
 
@@ -175,3 +179,19 @@ def osgrid2bbox(gridref, os_cellsize, epsg):
         "y_max": max_lat,
     }
     return bbox
+
+
+def vector2bbox(vector_file):
+    """
+    Retrieves the coordinates of the bounding box of an input vector
+    file. This can be a variety of spatial vector files such as
+    shapefiles, geoJSON, KML, GPKG, GML DXF, etc.
+    """
+    gdf = gpd.read_file(vector_file)
+    bbox = gdf.total_bounds
+    return {
+        "x_min": float(bbox[0]),
+        "x_max": float(bbox[2]),
+        "y_min": float(bbox[1]),
+        "y_max": float(bbox[3]),
+    }
