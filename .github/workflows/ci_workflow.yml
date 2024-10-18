@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configuring Conda
-        uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: ${{ matrix.python-version }}
           miniconda-version: "latest"
@@ -36,7 +36,12 @@ jobs:
 
       - name: Unit Testing
         run: |
-          python -m pytest ./pyclms/tests/
+          python -m pytest --cov=./pyclms --cov-report=xml ./pyclms/tests/
+      
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
     #   - name: Notebook Testing
     #     run: |
